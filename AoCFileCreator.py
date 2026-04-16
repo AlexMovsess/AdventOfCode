@@ -69,8 +69,8 @@ else:
             
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
-with open(os.path.join(__location__, 'AdventOfCodeDay1.txt')) as f:
-    lines = f.readlines()
+with open(os.path.join(__location__, 'AdventOfCodeDay{day}.txt')) as f:
+    content = f.read()
 """)
 
     f.close()
@@ -85,7 +85,7 @@ else:
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 with open(os.path.join(__location__, 'AdventOfCodeDay{day}.txt')) as f:
-    lines = f.readlines()
+    content = f.read()
 """)
 
     f.close()
