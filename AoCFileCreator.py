@@ -58,7 +58,7 @@ except:
     pass
 
 with open(f"{path}/AdventOfCodeDay{day}.txt", "w") as f:
-    f.write(response.text)
+    f.write(response.text[:-1])  # Ignore last \n char
 
 try:
     f = open(f"{path}/AdventOfCodeDay{day}_1.py", "x")
