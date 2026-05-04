@@ -3,9 +3,9 @@ import re
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
-# This is an equation resolution / matrix simplification. number of variables is length of lights. We need to find all solutions and then pick the smallest ?
-
 # (3,4,5,7) (2,4,5,6,7) (1,4,7) (1,3,4,7) (1,2,3,4,5,7) (7) (1,2,3,6) (0,1,3,6,7) {4,59,39,250,242,220,26,250}
+
+# This is an equation resolution / matrix simplification. number of variables is length of lights. We need to find all solutions and then pick the smallest ?
 
 total = 0
 
@@ -15,43 +15,58 @@ with open(os.path.join(__location__, "AdventOfCodeDay10.txt")) as f:
 
     for line in lines:
 
-        lights_goal = list(
+        joltage_goal = list(
             map(lambda x: int(x), re.findall(r"\{(.*?)\}", line)[0].split(","))
         )
 
         buttons = re.findall(r"\((.*?)\)", line)
         buttons = [list(map(int, p.split(","))) for p in buttons]
+        buttons.sort(key=lambda x: len(x), reverse=True)
 
         finished = False
-
-        lights_goal_copy = lights_goal.copy()
-
         pushes = 0
 
+        joltage_goal_copy = joltage_goal.copy()
+
         while not finished:
-            minimum_light = 10000
-            for light in lights_goal_copy:
-                if light < minimum_light and light > 0:
-                    minimum_light = light
-            print(minimum_light)
-            min_idx = lights_goal_copy.index(minimum_light)
+
+            minimum_joltage = 10000000
+            if sum(joltage_goal_copy) == 0:
+                break
+
+            print(joltage_goal_copy)
+
+            for joltage in joltage_goal_copy:
+                print(joltage)
+                if joltage < minimum_joltage and joltage > 0:
+                    minimum_joltage = joltage
+
+            index_minimum_joltage = joltage_goal_copy.index(minimum_joltage)
+
+            print(buttons)
+            print(index_minimum_joltage, minimum_joltage)
 
             for button in buttons:
-                if min_idx in button:
+
+                if index_minimum_joltage in button:
                     print(button)
+                    print(joltage_goal_copy)
+                    right_button = True
 
-                    wrong_button = False
+                    for index in button:
+                        if joltage_goal_copy[index] - minimum_joltage < 0:
+                            right_button = False
 
-                    for button_idx in button:
-                        if lights_goal_copy[button_idx] - minimum_light < 0:
-                            wrong_button = True
+                    if right_button:
+                        for index in button:
+                            joltage_goal_copy[index] -= minimum_joltage
+                        pushes += minimum_joltage
+                    else:
+                        continue
 
-                    if not wrong_button:
-                        for button_idx in button:
-                            lights_goal_copy[button_idx] -= minimum_light
-                            pushes += minimum_light
-                            print(lights_goal_copy)
-                            input()
-                        break
+                    input()
+                    break
 
-# To find minum pushes required you need to start with buttons that are larger and
+        total += pushes
+        print(pushes)
+print(total)
